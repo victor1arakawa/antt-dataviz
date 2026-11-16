@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<title>Gerador de gráficos — AESIN/ANTT</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Gerador de gráficos com identidade visual da ANTT. Crie, personalize e baixe em SVG ou PNG. Seus dados ficam no navegador.">
+<meta name="theme-color" content="#2F5D8A">
+<link rel="stylesheet" href="css/fonts.css">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<div id="app">
+
+  <aside id="panel" aria-label="Painel de controle">
+    <div class="toolbar">
+      <button id="btn-new" class="ibtn" title="Novo gráfico" aria-label="Novo gráfico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"/></svg></button>
+      <span class="grow"></span>
+      <button id="btn-icons" class="ibtn" title="Biblioteca de ícones" aria-label="Biblioteca de ícones"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4l4 7H8z"/><circle cx="7" cy="17" r="3"/><rect x="13" y="14" width="7" height="6" rx="1"/></svg></button>
+      <button id="btn-themes" class="ibtn" title="Temas personalizados" aria-label="Temas personalizados"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c5 5 7 8 7 11a7 7 0 0 1-14 0c0-3 2-6 7-11z"/></svg></button>
+      <button id="btn-share" class="ibtn" title="Compartilhar e carregar" aria-label="Compartilhar e carregar"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.2 10.8l7.6-3.6M8.2 13.2l7.6 3.6"/></svg></button>
+      <button id="btn-more" class="ibtn" title="Mais opções" aria-label="Mais opções" aria-haspopup="menu"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><circle cx="12" cy="5" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="12" cy="19" r="1.8"/></svg></button>
+    </div>
+    <div class="tabs" role="tablist" aria-label="Seções">
+      <button role="tab" id="tabbtn-data" aria-controls="tab-data" class="tab">Dados</button>
+      <button role="tab" id="tabbtn-chart" aria-controls="tab-chart" class="tab">Gráfico</button>
+      <button role="tab" id="tabbtn-design" aria-controls="tab-design" class="tab">Design</button>
+      <button role="tab" id="tabbtn-text" aria-controls="tab-text" class="tab">Texto</button>
+    </div>
+    <div class="tabbodies">
+      <div id="tab-data" role="tabpanel" aria-labelledby="tabbtn-data" class="tabpane"></div>
+      <div id="tab-chart" role="tabpanel" aria-labelledby="tabbtn-chart" class="tabpane" hidden></div>
+      <div id="tab-design" role="tabpanel" aria-labelledby="tabbtn-design" class="tabpane" hidden></div>
+      <div id="tab-text" role="tabpanel" aria-labelledby="tabbtn-text" class="tabpane" hidden></div>
+    </div>
+    <div class="note">Não registre aqui informação classificada ou sigilosa.</div>
+  </aside>
+
+  <div id="splitter" role="separator" aria-orientation="vertical" aria-label="Redimensionar painel" tabindex="0"></div>
+
+  <main id="stage">
+    <header class="stagebar">
+      <strong>Gerador de gráficos</strong><span class="muted"> — AESIN/ANTT</span>
+      <span id="chart-badge" class="badge"></span>
+      <span class="grow"></span>
+      <button id="btn-help" class="btn small ghost">Ajuda</button>
+      <button id="btn-full" class="btn small ghost">Tela cheia</button>
+      <button id="btn-download" class="btn primary small" aria-haspopup="menu">Baixar ▾</button>
+    </header>
+    <div class="preview">
+      <div id="empty" class="empty"><h2 id="empty-title">Seu gráfico aparece aqui</h2><p id="empty-text"></p></div>
+      <div id="chart" class="chart" aria-live="polite"></div>
+    </div>
+    <footer class="stagefoot">Seus dados ficam neste navegador. Nada que você cole ou carregue é enviado para fora.</footer>
+  </main>
+</div>
+
+<script src="js/core/util.js"></script>
+<script src="js/core/themes.js"></script>
+<script src="js/core/state.js"></script>
+<script src="js/core/registry.js"></script>
+<script src="js/data/icon-library.js"></script>
+<script src="js/charts/bars.js"></script>
+<script src="js/charts/lines.js"></script>
+<script src="js/charts/circular.js"></script>
+<script src="js/charts/sankey.js"></script>
+<script src="js/charts/numbers.js"></script>
+<script src="js/charts/detail.js"></script>
+<script src="js/data/samples.js"></script>
+<script src="js/core/export.js"></script>
+<script src="js/ui/controls.js"></script>
+<script src="js/ui/tab-design.js"></script>
+<script src="js/ui/tab-text.js"></script>
+<script src="js/ui/tab-chart.js"></script>
+<script src="js/ui/tab-data.js"></script>
+<script src="js/ui/modals.js"></script>
+<script src="js/ui/app.js"></script>
+</body>
+</html>
