@@ -242,7 +242,7 @@
     controls: ['areaStack', 'maxValue', 'color', 'seriesColors', 'yAxis'], render: area });
   AD.charts.register({ id: 'combo', annot: { highlight: 'series', refs: false, notes: false }, name: 'Coluna com linha (eixo duplo)', purposes: ['comparison', 'trend'], group: 'bars', multi: true, sortable: false,
     icon: I('<rect x="5" y="14" width="6" height="12" fill="currentColor" stroke="none"/><rect x="17" y="8" width="6" height="18" fill="currentColor" stroke="none"/><rect x="29" y="17" width="6" height="9" fill="currentColor" stroke="none"/><polyline points="8,8 20,15 32,5" opacity=".6"/>'),
-    defaults: { legend: true }, controls: ['barThickness', 'barSpacing', 'maxValue', 'color', 'seriesColors', 'valueLabels:h', 'pointLabels'], render: combo });
+    defaults: { legend: true, pointLabels: false }, controls: ['barThickness', 'barSpacing', 'maxValue', 'color', 'seriesColors', 'valueLabels:h', 'pointLabels'], render: combo });
   AD.charts.register({ id: 'scatter', annot: { highlight: 'label', refs: false, notes: false }, name: 'Dispersão', purposes: ['relflow', 'comparison'], group: 'relation', multi: false, sortable: false, raw: true,
     icon: I('<circle cx="8" cy="22" r="2.6" fill="currentColor" stroke="none"/><circle cx="16" cy="16" r="2.6" fill="currentColor" stroke="none"/><circle cx="22" cy="20" r="2.6" fill="currentColor" stroke="none"/><circle cx="30" cy="9" r="2.6" fill="currentColor" stroke="none"/><circle cx="34" cy="14" r="2.6" fill="currentColor" stroke="none"/>'),
     defaults: { pointLabels: false }, controls: ['color', 'varyColors', 'pointSize', 'pointLabels', 'trendLine'], render: scatter });
