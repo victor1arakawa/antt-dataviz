@@ -47,6 +47,8 @@
     pointSize: { group: 'options', kind: 'slider', label: 'Tamanho dos pontos', min: 2, max: 10, step: 1, unit: 'px' },
     areaFill: { group: 'options', kind: 'toggle', label: 'Preenchimento de área' },
     endLabels: { group: 'options', kind: 'toggle', label: 'Nome da série no fim da linha' },
+    areaStack: { group: 'options', kind: 'toggle', label: 'Áreas empilhadas' },
+    trendLine: { group: 'options', kind: 'toggle', label: 'Linha de tendência' },
     separateScale: { group: 'options', kind: 'toggle', label: 'Escala separada por gráfico' },
     nodeWidth: { group: 'options', kind: 'slider', label: 'Largura dos nós', min: 8, max: 40, step: 1, unit: 'px' },
     nodePadding: { group: 'options', kind: 'slider', label: 'Espaço entre nós', min: 4, max: 40, step: 1, unit: 'px' },
@@ -72,14 +74,14 @@
 
   /* Controles que valem para (quase) todo tipo */
   var NO_NUM = { table: 1, timeline: 1, calendar: 1 };
-  var LEGEND = { 'stacked-bar': 1, 'stacked-col': 1, 'cluster-bar': 1, line: 1, pie: 1, donut: 1, 'cluster-donut': 1, bubble: 1, timeline: 1, calendar: 1 };
+  var LEGEND = { area: 1, combo: 1, heatmap: 1, ufmap: 1, 'stacked-bar': 1, 'stacked-col': 1, 'cluster-bar': 1, line: 1, pie: 1, donut: 1, 'cluster-donut': 1, bubble: 1, timeline: 1, calendar: 1 };
   AD.controlsFor = function (chart) {
     var ids = ['sizePresets', 'width', 'height'].concat(chart.controls || []);
     if (!NO_NUM[chart.id] && chart.id !== 'keyfigures') ids = ids.concat(['valueFormat', 'prefix', 'suffix', 'decimals']);
     if (chart.id === 'keyfigures') ids = ids.concat(['valueFormat', 'prefix', 'suffix', 'decimals']);
     if (!NO_NUM[chart.id] && chart.id !== 'sankey' && chart.id !== 'keyfigures') ids.push('hideZero');
     if (chart.id !== 'table') ids.push('labelScale');
-    if (!NO_NUM[chart.id] && ['hbar', 'vbar', 'stacked-bar', 'stacked-col', 'cluster-bar', 'bubble', 'pie', 'donut', 'cluster-donut', 'sankey', 'icon'].indexOf(chart.id) >= 0) ids.push('labelColor');
+    if (!NO_NUM[chart.id] && ['combo', 'ufmap', 'heatmap', 'hbar', 'vbar', 'stacked-bar', 'stacked-col', 'cluster-bar', 'bubble', 'pie', 'donut', 'cluster-donut', 'sankey', 'icon'].indexOf(chart.id) >= 0) ids.push('labelColor');
     if (LEGEND[chart.id]) ids.push('legend');
     var seen = {}; return ids.filter(function (i) { if (seen[i] || !AD.CONTROLS[i]) return false; seen[i] = 1; return true; });
   };

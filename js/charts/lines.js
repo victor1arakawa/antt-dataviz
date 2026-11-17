@@ -8,7 +8,7 @@
     var d = ctx.d, th = ctx.th, fs = ctx.fs, body = ctx.body, cats = ctx.data.labels, n = cats.length, out = [], i, j;
     var fmt = function (v) { return AD.fmt(v, d); };
     var lo = o.lo, hi = o.hi;
-    var mv = AD.parseNum(d.maxValue); if (mv != null && mv > 0) hi = mv;
+    var mv = AD.parseNum(d.maxValue); if (mv != null && mv > 0) hi = mv; else ctx.refs.forEach(function (r) { hi = Math.max(hi, r.v); lo = Math.min(lo, r.v); });
     if (hi === lo) hi = lo + 1;
     var yAxis = d.yAxis === true, sc = yAxis ? AD.niceScale(lo, hi, 4) : { min: lo, max: hi, ticks: [] };
     var axW = 0;
@@ -17,7 +17,7 @@
     var right = fs * 1.2;
     if (d.endLabels) ser.forEach(function (s) { right = Math.max(right, Math.min(w * 0.3, AD.measure(s.name, fs, 700, body)) + 10); });
     var px = left, pw = Math.max(40, w - left - right), band = pw / n;
-    var top = fs * 1.8, X = function (k) { return px + (k + 0.5) * band; };
+    var top = fs * 1.8 + (AD.annot.hasNotes(ctx) ? fs * 1.8 : 0), X = function (k) { return px + (k + 0.5) * band; };
     var Y = function (v) { return top + plotH - (v - sc.min) / (sc.max - sc.min) * plotH; };
 
     sc.ticks.forEach(function (t) {
@@ -37,9 +37,19 @@
       lines.forEach(function (ln, q) { out.push(AD.txt(X(k), top + plotH + fs * 1.45 + q * lh, ln, { size: fs, fill: th.text, anchor: 'middle' })); });
     });
 
+    ctx.refs.forEach(function (rf) { out.push(AD.annot.refLine(ctx, rf, Y(rf.v), px, px + pw, true)); out.push(AD.annot.refLabel(ctx, rf, px + pw, Y(rf.v) - 4, 'end')); });
+    cats.forEach(function (c, k) {
+      var nt = ctx.notes[c]; if (!nt) return;
+      var ymin = Math.min.apply(null, ser.map(function (s) { return Y(s.vals[k]); })), tt = AD.ellipsis(nt, fs * 0.95, 400, body, Math.max(60, band * 2.4)), tw = AD.measure(tt, fs * 0.95, 400, body);
+      var nx = Math.max(tw / 2, Math.min(w - tw / 2, X(k)));
+      out.push(AD.txt(nx, fs * 1.0, tt, { size: fs * 0.95, italic: true, fill: th.text, anchor: 'middle', halo: th.bg }));
+      out.push(AD.line(X(k), fs * 1.0 + 4, X(k), Math.max(fs * 1.0 + 6, ymin - (d.pointLabels ? fs * 1.8 : 8)), th.muted, 1, '2 2'));
+    });
     var lw = 2.5, r = Math.max(2, (Number(d.pointSize) || 4) * 0.8);
     var lastBoxes = [];
-    ser.forEach(function (s, si) {
+    var order = ser.map(function (s, i) { return i; }).sort(function (a, b) { return (ctx.isDim(ser[b].name) ? 1 : 0) - (ctx.isDim(ser[a].name) ? 1 : 0); });
+    order.forEach(function (si) {
+      var s = ser[si], lw = ctx.hl.length && !ctx.isDim(s.name) ? 3.8 : 2.5;
       var col = o.colorOf ? o.colorOf(si, s) : ctx.color(si, s.name);
       var pts = s.vals.map(function (v, k) { return [X(k), Y(v)]; });
       if (d.areaFill) out.push('<polygon points="' + pts.map(function (p) { return p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' ') + ' ' + pts[n - 1][0].toFixed(1) + ',' + Y(Math.max(0, sc.min)).toFixed(1) + ' ' + pts[0][0].toFixed(1) + ',' + Y(Math.max(0, sc.min)).toFixed(1) + '" fill="' + col + '" opacity="0.15"/>');
@@ -116,11 +126,11 @@
   }
 
   var I = function (inner) { return '<svg viewBox="0 0 40 30" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">' + inner + '</svg>'; };
-  AD.charts.register({ id: 'line', name: 'Gráfico de linhas', purposes: ['trend'], group: 'lines', multi: true, sortable: false,
+  AD.charts.register({ id: 'line', annot: { highlight: 'series', refs: true, notes: true }, name: 'Gráfico de linhas', purposes: ['trend'], group: 'lines', multi: true, sortable: false,
     icon: I('<polyline points="4,22 13,12 22,17 35,5"/><circle cx="4" cy="22" r="1.6" fill="currentColor"/><circle cx="13" cy="12" r="1.6" fill="currentColor"/><circle cx="22" cy="17" r="1.6" fill="currentColor"/><circle cx="35" cy="5" r="1.6" fill="currentColor"/>'),
     legendDefault: function () { return true; },
     controls: ['maxValue', 'color', 'seriesColors', 'yAxis', 'pointLabels', 'points', 'pointSize', 'areaFill', 'endLabels'], render: lineChart });
-  AD.charts.register({ id: 'cluster-line', name: 'Linhas agrupadas', purposes: ['trend', 'comparison'], group: 'lines', multi: true, sortable: false,
+  AD.charts.register({ id: 'cluster-line', annot: { highlight: 'series', refs: true, notes: false }, name: 'Linhas agrupadas', purposes: ['trend', 'comparison'], group: 'lines', multi: true, sortable: false,
     icon: I('<polyline points="3,12 8,6 13,9"/><polyline points="24,12 29,7 35,10"/><polyline points="3,26 8,20 13,23"/><polyline points="24,26 29,21 35,24"/>'),
     controls: ['maxValue', 'seriesColors', 'yAxis', 'pointLabels', 'points', 'pointSize', 'areaFill', 'separateScale'], render: clusterLine });
 })();

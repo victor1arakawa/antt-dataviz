@@ -10,7 +10,7 @@
     valueFormat: 'auto', prefix: '', suffix: '', decimals: -1, hideZero: false, labelScale: 100,
     legend: null, stroke: false, axis: null,
     // linhas
-    yAxis: null, areaFill: false, points: true, pointSize: 4, pointLabels: true, endLabels: false, separateScale: false,
+    yAxis: null, areaFill: false, points: true, pointSize: 4, pointLabels: true, endLabels: false, separateScale: false, areaStack: false, trendLine: false,
     // circulares
     donutHole: 60, pieLabels: 'outside', pieText: 'name-pct', donutCenter: 'auto', donutCenterText: '',
     bubbleGap: 3,
@@ -29,7 +29,8 @@
       data: { headers: ['Rótulo', 'Valor'], rows: [['', ''], ['', ''], ['', '']] },
       labelCol: 0, valueCols: [], sortDesc: false,
       text: { title: '', subtitle: '', comments: '', footer: '', size: 100, width: null },
-      design: {}, seriesColors: {}
+      design: {}, seriesColors: {},
+      annot: { highlight: [], refs: [], notes: [] }
     };
   }
   AD.freshState = fresh;
@@ -45,6 +46,12 @@
     if (over.text) Object.assign(o.text, over.text);
     if (over.design) Object.assign(o.design, over.design);
     if (over.seriesColors) Object.assign(o.seriesColors, over.seriesColors);
+    if (over.annot && typeof over.annot === 'object') {
+      var a = over.annot;
+      if (Array.isArray(a.highlight)) o.annot.highlight = a.highlight.map(String);
+      if (Array.isArray(a.refs)) o.annot.refs = a.refs.filter(function (r) { return r && typeof r === 'object'; }).map(function (r) { return { value: String(r.value == null ? '' : r.value), label: String(r.label || ''), color: r.color || null }; });
+      if (Array.isArray(a.notes)) o.annot.notes = a.notes.filter(function (r) { return r && typeof r === 'object'; }).map(function (r) { return { at: String(r.at || ''), text: String(r.text || '') }; });
+    }
     return o;
   }
   AD.mergeState = function (over) { return merge(fresh(), over); };

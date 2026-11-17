@@ -9,6 +9,11 @@
     table: 'Todas as colunas são exibidas. Uma linha com só a primeira célula preenchida vira título de seção.',
     timeline: 'Colunas: data, evento e categoria (opcional). Datas: AAAA-MM-DD ou DD/MM/AAAA.',
     calendar: 'Colunas: atividade, início, fim e categoria (opcional). Início igual ao fim vira marco.',
+    area: 'Primeira coluna = períodos; cada coluna seguinte é uma área.',
+    combo: 'Primeira coluna = períodos; a 1ª coluna de valor vira colunas (eixo esquerdo) e as seguintes viram linhas (eixo direito).',
+    scatter: 'Colunas: rótulo, X, Y e, opcionalmente, tamanho (vira bolha).',
+    heatmap: 'Primeira coluna = linhas da matriz; cada coluna seguinte é uma coluna do mapa.',
+    ufmap: 'Primeira coluna = UF (sigla ou nome, ex.: SP, São Paulo); segunda = valor.',
     line: 'Primeira coluna = períodos; cada coluna seguinte é uma linha.',
     'cluster-line': 'Primeira coluna = períodos; cada coluna seguinte gera um painel.',
     'cluster-donut': 'Primeira coluna = categorias (fatias); cada coluna seguinte gera uma rosca.'
@@ -43,23 +48,44 @@
     AD.emit('structure');
   };
 
+  /* Importa .xlsx: lê o arquivo, escolhe a planilha (se houver mais de uma) e preenche a grade */
+  AD.importXlsx = function (f) {
+    var rd = new FileReader();
+    rd.onerror = function () { AD.toast('Não consegui abrir o arquivo.'); };
+    rd.onload = function () {
+      AD.readXlsx(rd.result).then(function (wb) {
+        var sh = wb.sheets.filter(function (s) { return s.rows.length > 1; });
+        if (!sh.length) return AD.toast('Nenhuma planilha com dados (cabeçalho + linhas) foi encontrada.');
+        var use = function (s) {
+          if (s.rows.length > 2000) { s = { name: s.name, rows: s.rows.slice(0, 2000) }; AD.toast('Planilha grande: usei as primeiras 2.000 linhas.'); }
+          AD.setGrid({ rows: s.rows }); AD.toast('Importado: ' + s.name + ' (' + (s.rows.length - 1) + ' linhas)');
+        };
+        if (sh.length === 1) return use(sh[0]);
+        var sel = h('select', {}, sh.map(function (s, i) { return h('option', { value: i, text: s.name + ' (' + (s.rows.length - 1) + ' linhas)' }); }));
+        AD.modal('Qual planilha importar?', h('div', {}, [h('div', { class: 'fhelp', text: 'O arquivo tem mais de uma planilha com dados.' }), sel]), [{ label: 'Cancelar' }, { label: 'Importar', primary: true, onclick: function () { use(sh[Number(sel.value)]); } }]);
+      }).catch(function (e) { AD.toast(e.message || 'Não consegui ler esse .xlsx.'); });
+    };
+    rd.readAsArrayBuffer(f);
+  };
+
   AD.buildDataTab = function (root) {
     root.innerHTML = '';
     var chart = AD.charts.byId[AD.S.type], G = AD.S.data;
     var ncols = function () { return G.headers.length; };
 
     /* ── topo ── */
-    var file = h('input', { type: 'file', accept: '.csv,.tsv,.txt', hidden: true });
+    var file = h('input', { type: 'file', accept: '.csv,.tsv,.txt,.xlsx', hidden: true });
     file.addEventListener('change', function () {
       var f = file.files[0]; if (!f) return;
+      if (/\.xlsx$/i.test(f.name)) { AD.importXlsx(f); file.value = ''; return; }
       var rd = new FileReader();
       rd.onload = function () { var t = AD.parseTable(String(rd.result)); t && t.rows.length > 1 ? AD.setGrid(t) : AD.toast('Não consegui ler esse arquivo. Use CSV com cabeçalho.'); };
       rd.readAsText(f, 'utf-8'); file.value = '';
     });
     root.appendChild(h('div', { class: 'sech' }, [h('h3', { text: 'Dados' })]));
-    root.appendChild(h('div', { class: 'fhelp', text: 'Clique em uma célula e cole do Excel (Ctrl+V), digite ou carregue um CSV. Números aceitam 1.234,5.' }));
+    root.appendChild(h('div', { class: 'fhelp', text: 'Clique em uma célula e cole do Excel (Ctrl+V), digite ou carregue um CSV ou .xlsx. Números aceitam 1.234,5.' }));
     root.appendChild(h('div', { class: 'btnrow' }, [
-      h('button', { type: 'button', class: 'btn', text: 'Carregar CSV', onclick: function () { file.click(); } }), file,
+      h('button', { type: 'button', class: 'btn', text: 'Carregar CSV ou Excel', onclick: function () { file.click(); } }), file,
       h('button', { type: 'button', class: 'linkbtn', text: 'Carregar dados de exemplo', onclick: function () { AD.loadSample(); } })
     ]));
     root.appendChild(h('div', { class: 'fhelp hint', text: HINTS[AD.S.type] || 'Primeira coluna = rótulos; as demais colunas = valores.' }));

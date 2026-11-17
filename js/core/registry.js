@@ -4,8 +4,8 @@
   var AD = window.AD;
 
   /* ── Registro ── */
-  AD.PURPOSES = [['comparison', 'Comparação'], ['trend', 'Tendência'], ['part', 'Parte do todo'], ['relflow', 'Relação e fluxo'], ['single', 'Valores únicos']];
-  AD.GROUPS = [['bars', 'Barras e colunas'], ['lines', 'Linhas'], ['circular', 'Circulares'], ['numbers', 'Números'], ['detail', 'Detalhe e tempo']];
+  AD.PURPOSES = [['comparison', 'Comparação'], ['trend', 'Tendência'], ['part', 'Parte do todo'], ['relflow', 'Relação e fluxo'], ['single', 'Valores únicos'], ['geo', 'Mapa do Brasil']];
+  AD.GROUPS = [['bars', 'Barras e colunas'], ['lines', 'Linhas e áreas'], ['circular', 'Circulares'], ['relation', 'Relação, calor e mapa'], ['numbers', 'Números'], ['detail', 'Detalhe e tempo']];
 
   AD.charts = {
     list: [], byId: {},
@@ -96,18 +96,22 @@
     }
 
     var fixedH = d.height ? Number(d.height) : null;
-    var bodyH = fixedH ? Math.max(80, fixedH - headerH - footH - pad) : null;
+    var bodyH = fixedH ? Math.max(80, fixedH - headerH - (footH ? footH + base * 0.4 : 0) - pad) : null;
 
     var ctx = {
       W: Wc, H: bodyH, th: th, d: d, data: data, S: S, chart: chart, fs: fs, base: base, scale: scale, body: body, title: titleF,
       color: function (i, key) {
-        var k = key != null ? key : null;
-        if (k != null && S.seriesColors[k]) return S.seriesColors[k];
-        return th.colors[i % th.colors.length];
+        var k = key != null ? key : null, c = (k != null && S.seriesColors[k]) ? S.seriesColors[k] : th.colors[i % th.colors.length];
+        return k != null ? ctx.tone(c, k) : c;
       },
+      tone: function (c, key) { return ctx.isDim(key) ? AD.mix(c, th.bg, 0.72) : c; },
+      isDim: function (key) { return ctx.hl.length > 0 && ctx.hl.indexOf(key) < 0; },
+      hl: [], refs: [], notes: {},
       single: function () { return d.color || th.colors[0]; },
       legendOn: function (def) { return d.legend == null ? !!def : !!d.legend; }
     };
+    var ann = AD.annot.read(S, chart, data);
+    ctx.hl = ann.hl; ctx.refs = ann.refs; ctx.notes = ann.notes;
     var r;
     try { r = chart.render(ctx); }
     catch (e) { console.error(e); return placeholder('Erro ao desenhar: ' + e.message); }

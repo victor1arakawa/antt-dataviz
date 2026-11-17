@@ -6,8 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Gerador de gráficos com identidade visual da ANTT. Crie, personalize e baixe em SVG ou PNG. Seus dados ficam no navegador.">
 <meta name="theme-color" content="#2F5D8A">
-<link rel="stylesheet" href="css/fonts.css">
-<link rel="stylesheet" href="css/app.css">
+<link rel="stylesheet" href="css/fonts.css?v=3">
+<link rel="stylesheet" href="css/app.css?v=3">
 </head>
 <body>
 <div id="app">
@@ -26,12 +26,14 @@
       <button role="tab" id="tabbtn-chart" aria-controls="tab-chart" class="tab">Gráfico</button>
       <button role="tab" id="tabbtn-design" aria-controls="tab-design" class="tab">Design</button>
       <button role="tab" id="tabbtn-text" aria-controls="tab-text" class="tab">Texto</button>
+      <button role="tab" id="tabbtn-annot" aria-controls="tab-annot" class="tab">Destaques</button>
     </div>
     <div class="tabbodies">
       <div id="tab-data" role="tabpanel" aria-labelledby="tabbtn-data" class="tabpane"></div>
       <div id="tab-chart" role="tabpanel" aria-labelledby="tabbtn-chart" class="tabpane" hidden></div>
       <div id="tab-design" role="tabpanel" aria-labelledby="tabbtn-design" class="tabpane" hidden></div>
       <div id="tab-text" role="tabpanel" aria-labelledby="tabbtn-text" class="tabpane" hidden></div>
+      <div id="tab-annot" role="tabpanel" aria-labelledby="tabbtn-annot" class="tabpane" hidden></div>
     </div>
     <div class="note">Não registre aqui informação classificada ou sigilosa.</div>
   </aside>
@@ -55,25 +57,29 @@
   </main>
 </div>
 
-<script src="js/core/util.js"></script>
-<script src="js/core/themes.js"></script>
-<script src="js/core/state.js"></script>
-<script src="js/core/registry.js"></script>
-<script src="js/data/icon-library.js"></script>
-<script src="js/charts/bars.js"></script>
-<script src="js/charts/lines.js"></script>
-<script src="js/charts/circular.js"></script>
-<script src="js/charts/sankey.js"></script>
-<script src="js/charts/numbers.js"></script>
-<script src="js/charts/detail.js"></script>
-<script src="js/data/samples.js"></script>
-<script src="js/core/export.js"></script>
-<script src="js/ui/controls.js"></script>
-<script src="js/ui/tab-design.js"></script>
-<script src="js/ui/tab-text.js"></script>
-<script src="js/ui/tab-chart.js"></script>
-<script src="js/ui/tab-data.js"></script>
-<script src="js/ui/modals.js"></script>
-<script src="js/ui/app.js"></script>
+<script src="js/core/util.js?v=3"></script>
+<script src="js/core/themes.js?v=3"></script>
+<script src="js/core/state.js?v=3"></script>
+<script src="js/core/registry.js?v=3"></script>
+<script src="js/core/annotations.js?v=3"></script>
+<script src="js/data/icon-library.js?v=3"></script>
+<script src="js/charts/bars.js?v=3"></script>
+<script src="js/charts/lines.js?v=3"></script>
+<script src="js/charts/circular.js?v=3"></script>
+<script src="js/charts/sankey.js?v=3"></script>
+<script src="js/charts/numbers.js?v=3"></script>
+<script src="js/charts/extra.js?v=3"></script>
+<script src="js/charts/detail.js?v=3"></script>
+<script src="js/data/samples.js?v=3"></script>
+<script src="js/core/export.js?v=3"></script>
+<script src="js/core/xlsx.js?v=3"></script>
+<script src="js/ui/controls.js?v=3"></script>
+<script src="js/ui/tab-design.js?v=3"></script>
+<script src="js/ui/tab-text.js?v=3"></script>
+<script src="js/ui/tab-annot.js?v=3"></script>
+<script src="js/ui/tab-chart.js?v=3"></script>
+<script src="js/ui/tab-data.js?v=3"></script>
+<script src="js/ui/modals.js?v=3"></script>
+<script src="js/ui/app.js?v=3"></script>
 </body>
 </html>

@@ -147,7 +147,7 @@
     var sc = Math.min(1, W / (x1 - x0), ctx.H ? ctx.H / (y1 - y0) : 9);
     var out = [], vary = d.varyColors == null ? true : d.varyColors;
     items.forEach(function (it) {
-      var cx = W / 2 + (it.x - (x0 + x1) / 2) * sc, cy = (it.y - y0) * sc, r = it.r * sc, col = vary ? ctx.color(it.i, it.l) : ctx.single();
+      var cx = W / 2 + (it.x - (x0 + x1) / 2) * sc, cy = (it.y - y0) * sc, r = it.r * sc, col = vary ? ctx.color(it.i, it.l) : ctx.tone(ctx.single(), it.l);
       out.push('<circle cx="' + cx.toFixed(1) + '" cy="' + cy.toFixed(1) + '" r="' + r.toFixed(1) + '" fill="' + col + '"/>');
       var tc = d.labelColor || AD.contrastText(col), val = AD.fmt(it.v, d);
       if (r >= fs * 2.2) {
@@ -166,18 +166,18 @@
   }
 
   var I = function (inner) { return '<svg viewBox="0 0 40 30" fill="currentColor">' + inner + '</svg>'; };
-  AD.charts.register({ id: 'pie', name: 'Pizza', purposes: ['part'], group: 'circular', multi: false, sortable: true,
+  AD.charts.register({ id: 'pie', annot: { highlight: 'label', refs: false, notes: false }, name: 'Pizza', purposes: ['part'], group: 'circular', multi: false, sortable: true,
     icon: I('<circle cx="20" cy="15" r="12" opacity=".4"/><path d="M20 15V3a12 12 0 0 1 11.4 8.3z"/><path d="M20 15l11.4-3.7A12 12 0 0 1 22 26.8z" opacity=".7"/>'),
     legendDefault: function (d) { return d.pieLabels !== 'outside'; },
     controls: ['seriesColors', 'pieLabels', 'pieText'], render: function (c) { return pieLike(c, false); } });
-  AD.charts.register({ id: 'donut', name: 'Rosca', purposes: ['part', 'single'], group: 'circular', multi: false, sortable: true,
+  AD.charts.register({ id: 'donut', annot: { highlight: 'label', refs: false, notes: false }, name: 'Rosca', purposes: ['part', 'single'], group: 'circular', multi: false, sortable: true,
     icon: I('<circle cx="20" cy="15" r="9" fill="none" stroke="currentColor" stroke-width="6" opacity=".4"/><path d="M20 6a9 9 0 0 1 9 9" fill="none" stroke="currentColor" stroke-width="6"/>'),
     legendDefault: function (d) { return d.pieLabels !== 'outside'; },
     controls: ['seriesColors', 'donutHole', 'pieLabels', 'pieText', 'donutCenter'], render: function (c) { return pieLike(c, true); } });
   AD.charts.register({ id: 'cluster-donut', name: 'Rosca agrupada', purposes: ['part', 'comparison'], group: 'circular', multi: true, sortable: false,
     icon: I('<circle cx="10" cy="8" r="5" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="30" cy="8" r="5" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="10" cy="22" r="5" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="30" cy="22" r="5" fill="none" stroke="currentColor" stroke-width="3"/>'),
     defaults: { legend: true }, controls: ['seriesColors', 'donutHole', 'donutCenter'], render: clusterDonut });
-  AD.charts.register({ id: 'bubble', name: 'Gráfico de bolhas', purposes: ['comparison', 'relflow'], group: 'circular', multi: false, sortable: true,
+  AD.charts.register({ id: 'bubble', annot: { highlight: 'label', refs: false, notes: false }, name: 'Gráfico de bolhas', purposes: ['comparison', 'relflow'], group: 'circular', multi: false, sortable: true,
     icon: I('<circle cx="14" cy="16" r="9" opacity=".5"/><circle cx="29" cy="11" r="6"/><circle cx="30" cy="24" r="4" opacity=".7"/>'),
     defaults: { varyColors: true }, controls: ['color', 'varyColors', 'seriesColors', 'bubbleGap'], render: bubble });
 })();
